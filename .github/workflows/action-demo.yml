@@ -10,7 +10,7 @@ jobs:
   passes-on-harmless-change:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: ./
         with:
           baseline: examples/baseline.jsonl
@@ -19,7 +19,7 @@ jobs:
   fails-on-overconfidence:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - id: cal
         uses: ./
         continue-on-error: true
