@@ -1,5 +1,7 @@
 # calibration-ci
 
+[![tests](https://github.com/kishoren18-hue/calibration-ci/actions/workflows/ci.yml/badge.svg)](https://github.com/kishoren18-hue/calibration-ci/actions/workflows/ci.yml) [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 **Unit tests for model confidence.** A GitHub Action, CLI and pytest plugin that fails your build when a prompt change, fine-tune or model upgrade makes the model's confidence less trustworthy, even if accuracy stays flat.
 
 Teams that ship LLM features usually test accuracy on an eval set. Almost nobody tests whether the model's confidence stayed honest. That gap matters because confidence is what downstream systems act on: it decides when to auto-approve, when to escalate to a human, and when to show a warning. A change can keep accuracy identical while making the model badly overconfident, and an accuracy-only suite will pass it.
