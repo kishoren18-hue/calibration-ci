@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "calibration-ci"
+version = "0.1.0"
+description = "Regression tests for model confidence: fail CI when calibration gets worse"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Kishore Nuthalapati" }]
+requires-python = ">=3.9"
+dependencies = []
+keywords = ["calibration", "llm", "evaluation", "ci", "github-action", "pytest"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+calibration-ci = "calibration_ci.cli:main"
+
+[project.entry-points.pytest11]
+calibration_ci = "calibration_ci.pytest_plugin"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

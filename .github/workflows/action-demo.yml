@@ -1,0 +1,30 @@
+name: action demo
+
+# Dogfoods the action on this repo's example runs:
+# the harmless change must pass and the overconfident change must fail.
+on:
+  push:
+  pull_request:
+
+jobs:
+  passes-on-harmless-change:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ./
+        with:
+          baseline: examples/baseline.jsonl
+          current: examples/current_ok.jsonl
+
+  fails-on-overconfidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - id: cal
+        uses: ./
+        continue-on-error: true
+        with:
+          baseline: examples/baseline.jsonl
+          current: examples/current_regressed.jsonl
+      - name: expect a regression
+        run: test "${{ steps.cal.outputs.regressed }}" = "true"

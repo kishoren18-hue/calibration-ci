@@ -1,0 +1,46 @@
+name: "Calibration CI"
+description: "Fail the build when a model's confidence calibration regresses against a baseline eval run"
+author: "Kishore Nuthalapati"
+branding:
+  icon: "activity"
+  color: "blue"
+
+inputs:
+  baseline:
+    description: "Path to the baseline JSONL (id, correct, confidence)"
+    required: true
+  current:
+    description: "Path to the candidate JSONL produced by this run"
+    required: true
+  config:
+    description: "Optional TOML/JSON policy file"
+    required: false
+    default: ""
+  python-version:
+    description: "Python version to run the checker with"
+    required: false
+    default: "3.12"
+
+outputs:
+  regressed:
+    description: "'true' if any metric regressed"
+    value: ${{ steps.check.outputs.regressed }}
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.python-version }}
+    - shell: bash
+      run: pip install --quiet "${{ github.action_path }}"
+    - id: check
+      shell: bash
+      run: |
+        set +e
+        args=(compare --baseline "${{ inputs.baseline }}" --current "${{ inputs.current }}" --json calibration-ci.json)
+        if [ -n "${{ inputs.config }}" ]; then args+=(--config "${{ inputs.config }}"); fi
+        calibration-ci "${args[@]}"
+        code=$?
+        if [ $code -eq 1 ]; then echo "regressed=true" >> "$GITHUB_OUTPUT"; else echo "regressed=false" >> "$GITHUB_OUTPUT"; fi
+        exit $code
