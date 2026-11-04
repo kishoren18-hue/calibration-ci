@@ -10,7 +10,7 @@ readme = "README.md"
 license = { text = "MIT" }
 authors = [{ name = "Kishore Nuthalapati" }]
 requires-python = ">=3.9"
-dependencies = []
+dependencies = ["tomli>=1.1; python_version < '3.11'"]
 keywords = ["calibration", "llm", "evaluation", "ci", "github-action", "pytest"]
 
 [project.optional-dependencies]

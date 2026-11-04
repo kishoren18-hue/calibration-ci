@@ -105,7 +105,7 @@ ECE alone can hide a model that is "calibrated" only because its confidence is n
 
 ## Design notes
 
-* Zero runtime dependencies, so the action installs in a couple of seconds.
+* No runtime dependencies on Python 3.11+ (tomli on older versions), so the action installs in seconds.
 * Deterministic: bootstrap uses a fixed seed (configurable).
 * The baseline is just a file in your repo. Updating it is a reviewed commit, which is the point.
 
