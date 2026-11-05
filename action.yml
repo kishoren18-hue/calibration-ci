@@ -16,6 +16,14 @@ inputs:
     description: "Optional TOML/JSON policy file"
     required: false
     default: ""
+  comment-on-pr:
+    description: "Post (or update) the results table as a pull request comment. Needs `pull-requests: write` permission."
+    required: false
+    default: "false"
+  upload-diagram:
+    description: "Upload a baseline-vs-current reliability diagram (SVG) and the JSON results as a workflow artifact"
+    required: false
+    default: "true"
   python-version:
     description: "Python version to run the checker with"
     required: false
@@ -29,18 +37,50 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - uses: actions/setup-python@v5
+    - uses: actions/setup-python@v6
       with:
         python-version: ${{ inputs.python-version }}
+
     - shell: bash
       run: pip install --quiet "${{ github.action_path }}"
+
     - id: check
       shell: bash
+      env:
+        CAL_BASELINE: ${{ inputs.baseline }}
+        CAL_CURRENT: ${{ inputs.current }}
+        CAL_CONFIG: ${{ inputs.config }}
       run: |
         set +e
-        args=(compare --baseline "${{ inputs.baseline }}" --current "${{ inputs.current }}" --json calibration-ci.json)
-        if [ -n "${{ inputs.config }}" ]; then args+=(--config "${{ inputs.config }}"); fi
+        mkdir -p calibration-ci-out
+        args=(compare --baseline "$CAL_BASELINE" --current "$CAL_CURRENT"
+              --json calibration-ci-out/results.json
+              --markdown calibration-ci-out/comment.md
+              --svg calibration-ci-out/reliability.svg)
+        if [ -n "$CAL_CONFIG" ]; then args+=(--config "$CAL_CONFIG"); fi
         calibration-ci "${args[@]}"
         code=$?
+        echo "code=$code" >> "$GITHUB_OUTPUT"
         if [ $code -eq 1 ]; then echo "regressed=true" >> "$GITHUB_OUTPUT"; else echo "regressed=false" >> "$GITHUB_OUTPUT"; fi
-        exit $code
+
+    - name: Comment on pull request
+      if: inputs.comment-on-pr == 'true' && github.event_name == 'pull_request' && steps.check.outputs.code != '2'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        PR: ${{ github.event.pull_request.number }}
+      run: |
+        gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --edit-last --body-file calibration-ci-out/comment.md \
+          || gh pr comment "$PR" --repo "$GITHUB_REPOSITORY" --body-file calibration-ci-out/comment.md
+
+    - name: Upload diagram and results
+      if: inputs.upload-diagram == 'true' && steps.check.outputs.code != '2'
+      uses: actions/upload-artifact@v4
+      with:
+        name: calibration-ci-${{ github.job }}
+        path: calibration-ci-out/
+        if-no-files-found: ignore
+
+    - name: Set exit status
+      shell: bash
+      run: exit ${{ steps.check.outputs.code }}

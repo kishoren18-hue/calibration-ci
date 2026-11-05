@@ -20,7 +20,9 @@ Teams that ship LLM features usually test accuracy on an eval set. Almost nobody
 | overconfidence | 0.018 | 0.251 | +0.233 | n/a | info |  |
 ```
 
-That output is real, produced from the example runs in `examples/`: accuracy is unchanged, confidence got pushed toward 100%, and the check fails.
+That output is real, produced from the example runs in `examples/`: accuracy is unchanged, confidence got pushed toward 100%, and the check fails. The reliability diagram the action produces for the same runs shows the problem at a glance:
+
+![Baseline vs current reliability diagram](docs/reliability.svg)
 
 ## Use it as a GitHub Action
 
@@ -28,27 +30,46 @@ That output is real, produced from the example runs in `examples/`: accuracy is 
 # .github/workflows/calibration.yml
 name: calibration
 on: [pull_request]
+permissions:
+  contents: read
+  pull-requests: write        # only needed for comment-on-pr
 jobs:
   calibration:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Run your eval
         run: python run_eval.py --out evals/current.jsonl   # your code
-      - uses: kishoren18-hue/calibration-ci@v0.1.0
+      - uses: kishoren18-hue/calibration-ci@main
         with:
           baseline: evals/baseline.jsonl
           current: evals/current.jsonl
+          comment-on-pr: true
 ```
 
-The comparison table is written to the job summary, and the action exposes a `regressed` output.
+What you get on every pull request:
+
+* the comparison table in the job summary,
+* the same table as a PR comment (updated in place on each push) when `comment-on-pr: true`,
+* a `calibration-ci-<job>` artifact with `results.json` and `reliability.svg`,
+* a `regressed` output you can use in later steps.
+
+| Input | Default | Meaning |
+|---|---|---|
+| `baseline` | required | baseline JSONL |
+| `current` | required | candidate JSONL |
+| `config` | none | TOML/JSON policy file |
+| `comment-on-pr` | `false` | post/update a PR comment |
+| `upload-diagram` | `true` | upload the diagram and JSON as an artifact |
+| `python-version` | `3.12` | Python used to run the checker |
 
 ## Use it from the command line
 
 ```bash
 pip install git+https://github.com/kishoren18-hue/calibration-ci
 calibration-ci report evals/current.jsonl
-calibration-ci compare --baseline evals/baseline.jsonl --current evals/current.jsonl
+calibration-ci compare --baseline evals/baseline.jsonl --current evals/current.jsonl \
+    --svg reliability.svg --markdown comment.md --json results.json
 ```
 
 Exit code 0 means OK, 1 means a regression, 2 means bad input.
@@ -122,6 +143,10 @@ pip install -e ".[dev]"
 pytest -q
 python examples/make_examples.py   # regenerate example runs
 ```
+
+## Contributing
+
+Issues and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for setup and ideas to start with, [CHANGELOG.md](CHANGELOG.md) for what's new, and [SECURITY.md](SECURITY.md) to report a problem privately. If you use this in research, GitHub's "Cite this repository" button (from [CITATION.cff](CITATION.cff)) gives a ready-made citation.
 
 ## License
 

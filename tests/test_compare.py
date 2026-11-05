@@ -88,3 +88,15 @@ def test_bad_rows_rejected(tmp_path):
 
 def test_pytest_fixture(calibration):
     calibration.check(EX / "baseline.jsonl", EX / "current_ok.jsonl", n_boot=200, ece=0.02)
+
+
+def test_svg_and_markdown_outputs(tmp_path):
+    import xml.etree.ElementTree as ET
+
+    svg, md = tmp_path / "r.svg", tmp_path / "c.md"
+    assert main(["compare", "--baseline", str(EX / "baseline.jsonl"), "--current", str(EX / "current_regressed.jsonl"),
+                 "--boot", "50", "--svg", str(svg), "--markdown", str(md)]) == 1
+    root = ET.fromstring(svg.read_text())
+    assert root.tag.endswith("svg")
+    assert svg.read_text().count("<circle") >= 4
+    assert "Calibration regression" in md.read_text()

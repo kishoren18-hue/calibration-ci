@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 420" font-family="system-ui,sans-serif" font-size="12">
+<rect width="520" height="420" fill="#ffffff"/>
+<text x="56" y="22" font-size="14" font-weight="600" fill="#1c2230">Reliability diagram</text>
+<line x1="56" x2="370" y1="372" y2="372" stroke="#e4e7ec"/>
+<text x="48" y="376" text-anchor="end" fill="#5d6678">0.00</text>
+<text x="56" y="390" text-anchor="middle" fill="#5d6678">0.00</text>
+<line x1="56" x2="370" y1="288.0" y2="288.0" stroke="#e4e7ec"/>
+<text x="48" y="292.0" text-anchor="end" fill="#5d6678">0.25</text>
+<text x="134.5" y="390" text-anchor="middle" fill="#5d6678">0.25</text>
+<line x1="56" x2="370" y1="204.0" y2="204.0" stroke="#e4e7ec"/>
+<text x="48" y="208.0" text-anchor="end" fill="#5d6678">0.50</text>
+<text x="213.0" y="390" text-anchor="middle" fill="#5d6678">0.50</text>
+<line x1="56" x2="370" y1="120.0" y2="120.0" stroke="#e4e7ec"/>
+<text x="48" y="124.0" text-anchor="end" fill="#5d6678">0.75</text>
+<text x="291.5" y="390" text-anchor="middle" fill="#5d6678">0.75</text>
+<line x1="56" x2="370" y1="36.0" y2="36.0" stroke="#e4e7ec"/>
+<text x="48" y="40.0" text-anchor="end" fill="#5d6678">1.00</text>
+<text x="370.0" y="390" text-anchor="middle" fill="#5d6678">1.00</text>
+<line x1="56" y1="372" x2="370" y2="36" stroke="#9aa3b2" stroke-dasharray="4 4"/>
+<text x="213.0" y="410" text-anchor="middle" fill="#5d6678">confidence</text>
+<text transform="translate(16 204.0) rotate(-90)" text-anchor="middle" fill="#5d6678">accuracy</text>
+<polyline points="73.5,372.0 104.6,276.0 132.9,244.6 164.2,257.3 198.3,257.6 230.8,176.5 260.6,169.1 290.1,143.3 322.5,108.9 356.9,43.6" fill="none" stroke="#5b6b7f" stroke-width="2"/>
+<circle cx="73.5" cy="372.0" r="4.5" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.06, acc 0.00, n=11</title></circle>
+<circle cx="104.6" cy="276.0" r="5.0" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.15, acc 0.29, n=21</title></circle>
+<circle cx="132.9" cy="244.6" r="5.4" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.24, acc 0.38, n=29</title></circle>
+<circle cx="164.2" cy="257.3" r="5.9" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.34, acc 0.34, n=41</title></circle>
+<circle cx="198.3" cy="257.6" r="6.1" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.45, acc 0.34, n=47</title></circle>
+<circle cx="230.8" cy="176.5" r="6.3" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.56, acc 0.58, n=55</title></circle>
+<circle cx="260.6" cy="169.1" r="6.3" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.65, acc 0.60, n=53</title></circle>
+<circle cx="290.1" cy="143.3" r="6.8" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.75, acc 0.68, n=72</title></circle>
+<circle cx="322.5" cy="108.9" r="7.1" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.85, acc 0.78, n=83</title></circle>
+<circle cx="356.9" cy="43.6" r="7.2" fill="#5b6b7f" fill-opacity="0.8"><title>baseline: conf 0.96, acc 0.98, n=88</title></circle>
+<rect x="386" y="43" width="12" height="12" rx="2" fill="#5b6b7f"/>
+<text x="404" y="53" fill="#1c2230">baseline</text>
+<polyline points="268.1,312.7 293.4,279.4 324.2,172.1 354.8,95.2" fill="none" stroke="#d9822b" stroke-width="2"/>
+<circle cx="268.1" cy="312.7" r="4.8" fill="#d9822b" fill-opacity="0.8"><title>current: conf 0.68, acc 0.18, n=17</title></circle>
+<circle cx="293.4" cy="279.4" r="7.4" fill="#d9822b" fill-opacity="0.8"><title>current: conf 0.76, acc 0.28, n=98</title></circle>
+<circle cx="324.2" cy="172.1" r="8.6" fill="#d9822b" fill-opacity="0.8"><title>current: conf 0.85, acc 0.59, n=158</title></circle>
+<circle cx="354.8" cy="95.2" r="9.7" fill="#d9822b" fill-opacity="0.8"><title>current: conf 0.95, acc 0.82, n=227</title></circle>
+<rect x="386" y="65" width="12" height="12" rx="2" fill="#d9822b"/>
+<text x="404" y="75" fill="#1c2230">current</text>
+</svg>

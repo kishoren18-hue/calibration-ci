@@ -33,7 +33,7 @@ def load_config(path: str | None) -> dict:
         try:
             import tomli as tomllib
         except ModuleNotFoundError:
-            raise SystemExit("TOML config needs Python 3.11+ or `pip install tomli`; or use a .json config")
+            raise SystemExit("TOML config needs Python 3.11+ or `pip install tomli`; or use a .json config") from None
     return tomllib.loads(text)
 
 
@@ -42,8 +42,9 @@ def cmd_compare(a) -> int:
     opts = cfg.get("options", {})
     policy = cfg.get("thresholds", DEFAULT_POLICY)
     try:
+        base, cur = load_jsonl(a.baseline), load_jsonl(a.current)
         res = compare(
-            load_jsonl(a.baseline), load_jsonl(a.current), policy=policy,
+            base, cur, policy=policy,
             n_boot=int(a.boot if a.boot is not None else opts.get("n_boot", 1000)),
             require_significance=not a.no_significance and opts.get("require_significance", True),
             seed=int(opts.get("seed", 0)),
@@ -55,6 +56,15 @@ def cmd_compare(a) -> int:
     print(md)
     if a.json:
         Path(a.json).write_text(json.dumps(res.to_dict(), indent=2))
+    if a.markdown:
+        Path(a.markdown).write_text(md + "\n\n<sub>Posted by calibration-ci</sub>\n")
+    if a.svg:
+        from .diagram import reliability_svg
+        shared = sorted(set(base) & set(cur))
+        Path(a.svg).write_text(reliability_svg({
+            "baseline": ([base[i][0] for i in shared], [base[i][1] for i in shared]),
+            "current": ([cur[i][0] for i in shared], [cur[i][1] for i in shared]),
+        }))
     summary = a.summary or os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
         with open(summary, "a") as f:
@@ -89,6 +99,8 @@ def main(argv=None) -> int:
     c.add_argument("--no-significance", action="store_true", help="fail on any worsening above threshold")
     c.add_argument("--json", help="write machine-readable results here")
     c.add_argument("--summary", help="append the markdown table to this file")
+    c.add_argument("--markdown", help="write the markdown table to this file (e.g. for a PR comment)")
+    c.add_argument("--svg", help="write a baseline-vs-current reliability diagram (SVG) here")
     c.set_defaults(func=cmd_compare)
     r = sub.add_parser("report", help="print metrics for one run")
     r.add_argument("path")

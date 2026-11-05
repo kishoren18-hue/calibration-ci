@@ -3,4 +3,4 @@
 from .compare import DEFAULT_POLICY, Comparison, MetricResult, compare, load_jsonl
 from .metrics import METRICS, accuracy, auroc2, brier, ece, overconfidence
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"

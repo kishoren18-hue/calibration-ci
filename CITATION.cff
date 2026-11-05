@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "calibration-ci: regression tests for model confidence"
+abstract: "A GitHub Action, CLI and pytest plugin that fails CI when a model's confidence calibration regresses against a baseline, using paired bootstrap significance tests."
+type: software
+authors:
+  - family-names: Nuthalapati
+    given-names: Kishore
+repository-code: "https://github.com/kishoren18-hue/calibration-ci"
+license: MIT
+version: 0.2.0
+date-released: "2026-11-04"
+keywords:
+  - calibration
+  - continuous integration
+  - github action
+  - llm evaluation
