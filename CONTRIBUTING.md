@@ -30,6 +30,8 @@ Good tests matter more than clever code here. A bug fix should come with a test 
 
 ## Ideas to start with
 
+Issues labeled [good first issue](https://github.com/kishoren18-hue/calibration-ci/labels/good%20first%20issue) are scoped for a first pull request, with the files to touch and what "done" means. Other ideas:
+
 * Add adaptive (equal-count) ECE as an optional metric
 * Support CSV input in addition to JSONL
 * Add a per-slice breakdown (e.g. by task category) to the report
